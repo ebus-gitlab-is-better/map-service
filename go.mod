@@ -1,6 +1,6 @@
 module map-service
 
-go 1.18
+go 1.19
 
 require (
 	github.com/Nerzal/gocloak/v13 v13.8.0
