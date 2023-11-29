@@ -1,0 +1,62 @@
+basePath: /
+definitions:
+  gosrm.LineString:
+    properties:
+      coordinates:
+        description: Coordinates of the line string.
+        items:
+          items:
+            type: number
+          type: array
+        type: array
+      type:
+        description: Type of the line string.
+        type: string
+    type: object
+host: maps.e-bus.site
+info:
+  contact:
+    email: suro@hyneo.ru
+    name: Suro
+    url: https://t.me/suronek
+  description: This is documentation api for backend
+  title: Chat Service Swagger API
+  version: "1.0"
+paths:
+  /maps/{coordinates}/:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: '[{longitude},{latitude};{longitude},{latitude}[;{longitude},{latitude}
+          ...]'
+        in: path
+        name: coordinates
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gosrm.LineString'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get path
+      tags:
+      - chat
+securityDefinitions:
+  authorization:
+    in: header
+    name: authorization
+    type: apiKey
+swagger: "2.0"

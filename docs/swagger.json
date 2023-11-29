@@ -1,0 +1,91 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is documentation api for backend",
+        "title": "Chat Service Swagger API",
+        "contact": {
+            "name": "Suro",
+            "url": "https://t.me/suronek",
+            "email": "suro@hyneo.ru"
+        },
+        "version": "1.0"
+    },
+    "host": "maps.e-bus.site",
+    "basePath": "/",
+    "paths": {
+        "/maps/{coordinates}/": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "chat"
+                ],
+                "summary": "Get path",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "[{longitude},{latitude};{longitude},{latitude}[;{longitude},{latitude} ...]",
+                        "name": "coordinates",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gosrm.LineString"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "gosrm.LineString": {
+            "type": "object",
+            "properties": {
+                "coordinates": {
+                    "description": "Coordinates of the line string.",
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "type": {
+                    "description": "Type of the line string.",
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "authorization": {
+            "type": "apiKey",
+            "name": "authorization",
+            "in": "header"
+        }
+    }
+}

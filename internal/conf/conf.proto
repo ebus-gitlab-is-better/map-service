@@ -36,6 +36,14 @@ message Data {
     google.protobuf.Duration read_timeout = 3;
     google.protobuf.Duration write_timeout = 4;
   }
+  message KeyCloak {
+    string hostname = 1;
+    string client_id = 2;
+    string client_secret = 3;
+    string realm = 4;
+  }
   Database database = 1;
   Redis redis = 2;
+  string osrm = 3;
+  KeyCloak keycloak = 4;
 }

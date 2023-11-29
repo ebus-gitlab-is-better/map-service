@@ -7,31 +7,26 @@
 package main
 
 import (
-	"map-service/internal/biz"
+	"github.com/go-kratos/kratos/v2"
+	"github.com/go-kratos/kratos/v2/log"
 	"map-service/internal/conf"
 	"map-service/internal/data"
 	"map-service/internal/server"
-	"map-service/internal/service"
+)
 
-	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
+import (
+	_ "go.uber.org/automaxprocs"
 )
 
 // Injectors from wire.go:
 
 // wireApp init kratos application.
 func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	dataData, cleanup, err := data.NewData(confData, logger)
-	if err != nil {
-		return nil, nil, err
-	}
-	greeterRepo := data.NewGreeterRepo(dataData, logger)
-	greeterUsecase := biz.NewGreeterUsecase(greeterRepo, logger)
-	greeterService := service.NewGreeterService(greeterUsecase)
-	grpcServer := server.NewGRPCServer(confServer, greeterService, logger)
-	httpServer := server.NewHTTPServer(confServer, greeterService, logger)
-	app := newApp(logger, grpcServer, httpServer)
+	goCloak := data.NewKeycloak(confData)
+	keycloakAPI := data.NewKeyCloakAPI(confData, goCloak, logger)
+	osrmClient := data.NewOSRMClient(confData)
+	httpServer := server.NewHTTPServer(confServer, keycloakAPI, osrmClient, logger)
+	app := newApp(logger, httpServer)
 	return app, func() {
-		cleanup()
 	}, nil
 }

@@ -13,3 +13,9 @@ data:
     addr: 127.0.0.1:6379
     read_timeout: 0.2s
     write_timeout: 0.2s
+  keycloak:
+    hostname: ${KC_HOST}
+    client_id: "${KC_CLIENT}"
+    client_secret: "${KC_SECRET}"
+    realm: ${KC_REALM}
+  osrm: ${OSRM}
