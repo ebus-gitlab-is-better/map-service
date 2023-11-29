@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "description": "This is documentation api for backend",
-        "title": "Chat Service Swagger API",
+        "title": "Map Service Swagger API",
         "contact": {
             "name": "Suro",
             "url": "https://t.me/suronek",
@@ -22,7 +22,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "chat"
+                    "map"
                 ],
                 "summary": "Get path",
                 "parameters": [

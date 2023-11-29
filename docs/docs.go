@@ -28,7 +28,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "chat"
+                    "map"
                 ],
                 "summary": "Get path",
                 "parameters": [
@@ -102,7 +102,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "maps.e-bus.site",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "Chat Service Swagger API",
+	Title:            "Map Service Swagger API",
 	Description:      "This is documentation api for backend",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
