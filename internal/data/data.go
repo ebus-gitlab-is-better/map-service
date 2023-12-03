@@ -2,15 +2,15 @@ package data
 
 import (
 	"map-service/internal/conf"
+	"map-service/pkg/valhalla"
 
 	"github.com/Nerzal/gocloak/v13"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
-	"github.com/mojixcoder/gosrm"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewOSRMClient, NewKeycloak, NewKeyCloakAPI)
+var ProviderSet = wire.NewSet(NewData, NewValhallaClient, NewKeycloak, NewKeyCloakAPI)
 
 // Data .
 type Data struct {
@@ -25,11 +25,8 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 	return &Data{}, cleanup, nil
 }
 
-func NewOSRMClient(c *conf.Data) gosrm.OSRMClient {
-	client, err := gosrm.New(c.Osrm)
-	if err != nil {
-		panic(err)
-	}
+func NewValhallaClient(c *conf.Data) *valhalla.Client {
+	client := valhalla.New(c.Osrm)
 	return client
 }
 

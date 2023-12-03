@@ -5,6 +5,7 @@ import (
 	"map-service/internal/conf"
 	"map-service/internal/data"
 	"map-service/internal/route"
+	"map-service/pkg/valhalla"
 	http1 "net/http"
 	"strings"
 
@@ -13,7 +14,6 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	"github.com/mojixcoder/gosrm"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -82,7 +82,7 @@ func AuthMiddleware(api *data.KeycloakAPI) gin.HandlerFunc {
 
 // @host		maps.e-bus.site
 // @BasePath	/
-func NewHTTPServer(c *conf.Server, api *data.KeycloakAPI, client gosrm.OSRMClient, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, api *data.KeycloakAPI, client *valhalla.Client, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),

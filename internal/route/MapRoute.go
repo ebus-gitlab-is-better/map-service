@@ -1,21 +1,23 @@
 package route
 
 import (
-	"context"
 	"fmt"
+	"log"
+	"map-service/pkg/valhalla"
 	"net/http"
 	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mojixcoder/gosrm"
+	"github.com/twpayne/go-polyline"
 )
 
 type MapRoute struct {
-	client gosrm.OSRMClient
+	client *valhalla.Client
 }
 
-func NewMapRoute(client gosrm.OSRMClient) *MapRoute {
+func NewMapRoute(client *valhalla.Client) *MapRoute {
 	return &MapRoute{client: client}
 }
 
@@ -44,16 +46,23 @@ func (r *MapRoute) GetPath(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	routeRes, err := gosrm.Route[gosrm.LineString](context.Background(), r.client, gosrm.Request{
-		Profile:     gosrm.ProfileDriving,
-		Coordinates: points,
-	}, gosrm.WithGeometries(gosrm.GeometryGeoJSON))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	request := valhalla.RouteRequest{}
+	for _, point := range points {
+		request.Locations = append(request.Locations, valhalla.Location{
+			Lat: point[0],
+			Lon: point[1],
+		})
 	}
-	c.JSON(200, routeRes.Routes[0].Geometry)
+	request.Costing = "bus"
+	//TODO request.ExcludeLocations
+	route, err := r.client.Route(request)
+	if err != nil {
+		log.Fatal(err)
+	}
+	shape := route.Trip.Legs[0].Shape
+	coords, _, _ := polyline.DecodeCoords([]byte(shape))
+	fmt.Println(coords)
+	c.JSON(200, coords)
 }
 
 func parseCoordinates(input string) ([]gosrm.Coordinate, error) {

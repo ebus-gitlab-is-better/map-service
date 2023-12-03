@@ -24,8 +24,8 @@ import (
 func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
 	goCloak := data.NewKeycloak(confData)
 	keycloakAPI := data.NewKeyCloakAPI(confData, goCloak, logger)
-	osrmClient := data.NewOSRMClient(confData)
-	httpServer := server.NewHTTPServer(confServer, keycloakAPI, osrmClient, logger)
+	client := data.NewValhallaClient(confData)
+	httpServer := server.NewHTTPServer(confServer, keycloakAPI, client, logger)
 	app := newApp(logger, httpServer)
 	return app, func() {
 	}, nil
