@@ -3,6 +3,7 @@ package valhalla
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 )
 
 type DirectionsOptions struct {
@@ -103,7 +104,7 @@ func (c *Client) Route(request RouteRequest) (RouteResponse, error) {
 	if err != nil {
 		return RouteResponse{}, err
 	}
-
+	fmt.Println(request)
 	response, err := c.request("GET", "route", bytes.NewReader(r))
 	if err != nil {
 		return RouteResponse{}, err
