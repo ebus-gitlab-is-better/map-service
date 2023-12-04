@@ -19,5 +19,6 @@ COPY  ./configs/config.yaml /app
 WORKDIR /app
 
 EXPOSE 8000
+EXPOSE 9000
 
 CMD ["./map-service", "-conf", "config.yaml"]

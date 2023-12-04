@@ -2,10 +2,10 @@ package server
 
 import (
 	_ "map-service/docs"
+	"map-service/internal/biz"
 	"map-service/internal/conf"
 	"map-service/internal/data"
 	"map-service/internal/route"
-	"map-service/pkg/valhalla"
 	http1 "net/http"
 	"strings"
 
@@ -82,7 +82,7 @@ func AuthMiddleware(api *data.KeycloakAPI) gin.HandlerFunc {
 
 // @host		maps.e-bus.site
 // @BasePath	/
-func NewHTTPServer(c *conf.Server, api *data.KeycloakAPI, client *valhalla.Client, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, api *data.KeycloakAPI, uc *biz.MapUseCase, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
@@ -105,7 +105,7 @@ func NewHTTPServer(c *conf.Server, api *data.KeycloakAPI, client *valhalla.Clien
 	config.AllowCredentials = true
 	r.Use(cors.New(config))
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	route := route.NewMapRoute(client)
+	route := route.NewMapRoute(uc)
 	mapsRoute := r.Group("/maps")
 	mapsRoute.Use(AuthMiddleware(api))
 	route.Register(mapsRoute)

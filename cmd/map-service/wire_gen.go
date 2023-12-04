@@ -9,9 +9,11 @@ package main
 import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
+	"map-service/internal/biz"
 	"map-service/internal/conf"
 	"map-service/internal/data"
 	"map-service/internal/server"
+	"map-service/internal/service"
 )
 
 import (
@@ -25,8 +27,11 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	goCloak := data.NewKeycloak(confData)
 	keycloakAPI := data.NewKeyCloakAPI(confData, goCloak, logger)
 	client := data.NewValhallaClient(confData)
-	httpServer := server.NewHTTPServer(confServer, keycloakAPI, client, logger)
-	app := newApp(logger, httpServer)
+	mapUseCase := biz.NewMapUseCase(client)
+	httpServer := server.NewHTTPServer(confServer, keycloakAPI, mapUseCase, logger)
+	mapService := service.NewMapService(mapUseCase)
+	grpcServer := server.NewGRPCServer(confServer, mapService, logger)
+	app := newApp(logger, httpServer, grpcServer)
 	return app, func() {
 	}, nil
 }
