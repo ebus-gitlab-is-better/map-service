@@ -20,6 +20,7 @@ func NewMapRoute(uc *biz.MapUseCase) *MapRoute {
 
 func (r *MapRoute) Register(router *gin.RouterGroup) {
 	router.GET("/:coordinates", r.GetPath)
+	router.POST("/check", r.CheckInPath)
 }
 
 type CoordsResponse struct {
