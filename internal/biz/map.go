@@ -27,8 +27,8 @@ func (uc *MapUseCase) GetPath(points []gosrm.Coordinate) string {
 	request := valhalla.RouteRequest{}
 	for _, point := range points {
 		request.Locations = append(request.Locations, valhalla.Location{
-			Lat: point[0],
-			Lon: point[1],
+			Lon: point[0],
+			Lat: point[1],
 		})
 	}
 	request.Costing = "bus"
