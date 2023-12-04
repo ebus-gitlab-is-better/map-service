@@ -19,6 +19,54 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/maps/check": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "map"
+                ],
+                "summary": "Get path",
+                "parameters": [
+                    {
+                        "description": "dto",
+                        "name": "dto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_route.PathDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_route.PathResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/maps/{coordinates}/": {
             "get": {
                 "consumes": [
@@ -44,7 +92,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/gosrm.LineString"
+                            "$ref": "#/definitions/internal_route.CoordsResponse"
                         }
                     },
                     "400": {
@@ -67,11 +115,10 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "gosrm.LineString": {
+        "internal_route.CoordsResponse": {
             "type": "object",
             "properties": {
-                "coordinates": {
-                    "description": "Coordinates of the line string.",
+                "coords": {
                     "type": "array",
                     "items": {
                         "type": "array",
@@ -79,10 +126,28 @@ const docTemplate = `{
                             "type": "number"
                         }
                     }
+                }
+            }
+        },
+        "internal_route.PathDTO": {
+            "type": "object",
+            "properties": {
+                "point": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
                 },
-                "type": {
-                    "description": "Type of the line string.",
+                "shape": {
                     "type": "string"
+                }
+            }
+        },
+        "internal_route.PathResponse": {
+            "type": "object",
+            "properties": {
+                "check": {
+                    "type": "boolean"
                 }
             }
         }
