@@ -32,7 +32,6 @@ func (uc *MapUseCase) GetPath(points []gosrm.Coordinate) string {
 		})
 	}
 	request.Costing = "bus"
-	//TODO request.ExcludeLocations
 	accidents, err := uc.accidentClient.ListAccident(context.TODO(), &emptypb.Empty{})
 	if err == nil {
 		excludeLocations := make([]valhalla.Location, 0)
@@ -47,6 +46,7 @@ func (uc *MapUseCase) GetPath(points []gosrm.Coordinate) string {
 	route, err := uc.client.Route(request)
 	if err != nil {
 		log.Fatal(err)
+		return ""
 	}
 	return route.Trip.Legs[0].Shape
 }
