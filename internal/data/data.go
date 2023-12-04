@@ -47,7 +47,7 @@ func NewValhallaClient(c *conf.Data) *valhalla.Client {
 func NewKeycloak(c *conf.Data) *gocloak.GoCloak {
 	client := gocloak.NewClient(c.Keycloak.Hostname)
 	restyClient := client.RestyClient()
-	restyClient.SetDebug(true)
+	// restyClient.SetDebug(true)
 	restyClient.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	return client
 }
