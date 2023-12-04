@@ -36,8 +36,8 @@ type RouteRequest struct {
 }
 
 type Contour struct {
-	Time  int    `json:"time,omitempty"`
-	Color string `json:"color,omitempty"`
+	Time  float64 `json:"time,omitempty"`
+	Color string  `json:"color,omitempty"`
 }
 
 type RouteResponse struct {
@@ -52,7 +52,7 @@ type RouteResponse struct {
 			Summary struct {
 				MaxLon float64 `json:"max_lon"`
 				MaxLat float64 `json:"max_lat"`
-				Time   int     `json:"time"`
+				Time   float64 `json:"time"`
 				Length float64 `json:"length"`
 				MinLat float64 `json:"min_lat"`
 				MinLon float64 `json:"min_lon"`
@@ -62,7 +62,7 @@ type RouteResponse struct {
 		Summary struct {
 			MaxLon float64 `json:"max_lon"`
 			MaxLat float64 `json:"max_lat"`
-			Time   int     `json:"time"`
+			Time   float64 `json:"time"`
 			Length float64 `json:"length"`
 			MinLat float64 `json:"min_lat"`
 			MinLon float64 `json:"min_lon"`
