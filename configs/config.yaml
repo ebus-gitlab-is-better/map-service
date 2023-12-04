@@ -19,3 +19,4 @@ data:
     client_secret: "${KC_SECRET}"
     realm: ${KC_REALM}
   osrm: ${OSRM}
+  accident_service: ${ACCIDENT_SERVICCE}

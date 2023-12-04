@@ -46,4 +46,5 @@ message Data {
   Redis redis = 2;
   string osrm = 3;
   KeyCloak keycloak = 4;
+  string accident_service = 5;
 }

@@ -1,16 +1,29 @@
 package data
 
 import (
+	"context"
 	"map-service/internal/conf"
 	"map-service/pkg/valhalla"
+	"time"
+
+	accidentS "map-service/api/accident/v1"
 
 	"github.com/Nerzal/gocloak/v13"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware/recovery"
+	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/google/wire"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewValhallaClient, NewKeycloak, NewKeyCloakAPI)
+var ProviderSet = wire.NewSet(
+	NewData,
+	NewValhallaClient,
+	NewKeycloak,
+	NewKeyCloakAPI,
+	NewAccidentService,
+)
 
 // Data .
 type Data struct {
@@ -33,4 +46,19 @@ func NewValhallaClient(c *conf.Data) *valhalla.Client {
 func NewKeycloak(c *conf.Data) *gocloak.GoCloak {
 	client := gocloak.NewClient(c.Keycloak.Hostname)
 	return client
+}
+
+func NewAccidentService(c *conf.Data) accidentS.AccidentClient {
+	conn, err := grpc.DialInsecure(
+		context.Background(),
+		grpc.WithEndpoint(c.AccidentService),
+		grpc.WithMiddleware(
+			tracing.Client(),
+			recovery.Recovery()),
+		grpc.WithTimeout(2*time.Second),
+	)
+	if err != nil {
+		panic(err)
+	}
+	return accidentS.NewAccidentClient(conn)
 }
