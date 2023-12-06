@@ -24,7 +24,7 @@ func (s *MapService) GetPath(ctx context.Context, req *pb.GetPathRequest) (*pb.P
 	points := make([]gosrm.Coordinate, 0)
 	for _, point := range req.Points {
 		points = append(points, gosrm.Coordinate{
-			float64(point.Lat), float64(point.Lon),
+			float64(point.Lon), float64(point.Lat),
 		})
 	}
 	path := s.uc.GetPath(points)
