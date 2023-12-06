@@ -27,6 +27,7 @@ type Path struct {
 	Shape   string
 	Time    []float32
 	Lengths []float32
+	Length  float32
 }
 
 func (uc *MapUseCase) GetPath(points []gosrm.Coordinate) *Path {
@@ -54,6 +55,7 @@ func (uc *MapUseCase) GetPath(points []gosrm.Coordinate) *Path {
 		log.Fatal(err)
 		return nil
 	}
+
 	times := make([]float32, 0)
 	coords := make([][2]float64, 0)
 	lengths := make([]float32, 0)
@@ -65,7 +67,7 @@ func (uc *MapUseCase) GetPath(points []gosrm.Coordinate) *Path {
 	}
 
 	shape := utils.EncodePolyline(coords)
-	return &Path{Shape: shape, Time: times, Lengths: lengths}
+	return &Path{Shape: shape, Time: times, Lengths: lengths, Length: float32(route.Trip.Summary.Length)}
 }
 
 func (uc *MapUseCase) CheckPath(shape string, point [2]float64) bool {
