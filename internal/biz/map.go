@@ -23,7 +23,12 @@ func NewMapUseCase(
 	return &MapUseCase{client: client, accidentClient: accidentClient}
 }
 
-func (uc *MapUseCase) GetPath(points []gosrm.Coordinate) string {
+type Path struct {
+	Shape string
+	Time  []float32
+}
+
+func (uc *MapUseCase) GetPath(points []gosrm.Coordinate) *Path {
 	request := valhalla.RouteRequest{}
 	for _, point := range points {
 		request.Locations = append(request.Locations, valhalla.Location{
@@ -46,9 +51,18 @@ func (uc *MapUseCase) GetPath(points []gosrm.Coordinate) string {
 	route, err := uc.client.Route(request)
 	if err != nil {
 		log.Fatal(err)
-		return ""
+		return nil
 	}
-	return route.Trip.Legs[0].Shape
+	times := make([]float32, 0)
+	coords := make([][2]float64, 0)
+	for _, leg := range route.Trip.Legs {
+		coord := utils.DecodePolyline(&leg.Shape)
+		coords = append(coords, coord...)
+		times = append(times, float32(leg.Summary.Time))
+	}
+
+	shape := utils.EncodePolyline(coords)
+	return &Path{Shape: shape, Time: times}
 }
 
 func (uc *MapUseCase) CheckPath(shape string, point [2]float64) bool {

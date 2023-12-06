@@ -27,8 +27,10 @@ func (s *MapService) GetPath(ctx context.Context, req *pb.GetPathRequest) (*pb.P
 			float64(point.Lon), float64(point.Lat),
 		})
 	}
+	path := s.uc.GetPath(points)
 	return &pb.PathResponse{
-		Shape: s.uc.GetPath(points),
+		Shape: path.Shape,
+		Time:  path.Time,
 	}, nil
 }
 func (s *MapService) CheckPath(ctx context.Context, req *pb.CheckPathRequest) (*pb.CheckPathResponse, error) {

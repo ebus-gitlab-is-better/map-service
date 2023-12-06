@@ -48,8 +48,8 @@ func (r *MapRoute) GetPath(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	shape := r.uc.GetPath(points)
-	coords := utils.DecodePolyline(&shape)
+	path := r.uc.GetPath(points)
+	coords := utils.DecodePolyline(&path.Shape)
 	c.JSON(200, CoordsResponse{
 		Coords: coords,
 	})

@@ -112,3 +112,36 @@ func DecodePolyline(encoded *string, precisionOptional ...int) [][2]float64 {
 
 	return coordinates
 }
+
+func EncodePolyline(coordinates [][2]float64, precisionOptional ...int) string {
+	precision := 6
+	if len(precisionOptional) > 0 {
+		precision = precisionOptional[0]
+	}
+	factor := math.Pow10(precision)
+
+	var encoded strings.Builder
+	previousLat, previousLng := 0, 0
+
+	for _, coordinate := range coordinates {
+		lat := int(math.Round(coordinate[1] * factor))
+		lng := int(math.Round(coordinate[0] * factor))
+		encodeValue(&encoded, lat-previousLat)
+		encodeValue(&encoded, lng-previousLng)
+		previousLat, previousLng = lat, lng
+	}
+
+	return encoded.String()
+}
+
+func encodeValue(encoded *strings.Builder, value int) {
+	value = value << 1
+	if value < 0 {
+		value = ^value
+	}
+	for value >= 0x20 {
+		encoded.WriteByte(byte((0x20 | (value & 0x1f)) + 63))
+		value >>= 5
+	}
+	encoded.WriteByte(byte(value + 63))
+}
