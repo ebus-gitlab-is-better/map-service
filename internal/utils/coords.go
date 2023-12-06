@@ -124,8 +124,8 @@ func EncodePolyline(coordinates [][2]float64, precisionOptional ...int) string {
 	previousLat, previousLng := 0, 0
 
 	for _, coordinate := range coordinates {
-		lat := int(math.Round(coordinate[1] * factor))
-		lng := int(math.Round(coordinate[0] * factor))
+		lat := int(math.Round(coordinate[0] * factor))
+		lng := int(math.Round(coordinate[1] * factor))
 		encodeValue(&encoded, lat-previousLat)
 		encodeValue(&encoded, lng-previousLng)
 		previousLat, previousLng = lat, lng
