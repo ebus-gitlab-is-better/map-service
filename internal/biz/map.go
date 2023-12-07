@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"map-service/internal/utils"
 	"map-service/pkg/valhalla"
@@ -48,8 +49,10 @@ func (uc *MapUseCase) GetPath(points []gosrm.Coordinate) *Path {
 				Lon: float64(accident.Lon),
 			})
 		}
+		fmt.Println(accidents)
 		request.ExcludeLocations = excludeLocations
 	}
+	fmt.Println(request)
 	route, err := uc.client.Route(request)
 	if err != nil {
 		log.Fatal(err)
